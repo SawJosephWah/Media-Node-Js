@@ -1,8 +1,10 @@
+const fs = require('fs');
+
 let saveFile =async  (req,res,next)=>{
     let file = req.files.file;
     let filename = new Date().valueOf() + '_' + file.name;
     file.mv(`./uploads/${filename}`);
-    req.fileUploadedName = filename;
+    req.body['image'] = filename;
     next();
 }
 
@@ -14,11 +16,18 @@ let saveFiles =async  (req,res,next)=>{
         file.mv(`./uploads/${filename}`);
         filenames.push(filename);
     })
-    req.filenames = filenames;
+    req.body['image'] = filenames.join('-');
     next();
 }
 
+let deleteFile = async (filename)=>{
+    fs.unlinkSync(`./uploads/${filename}`);
+}
+
+
+
 module.exports = {
     saveFile,
-    saveFiles
+    saveFiles,
+    deleteFile
 }

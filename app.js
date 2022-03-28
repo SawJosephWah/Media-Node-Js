@@ -4,23 +4,28 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = new express();
 const fileUpload = require('express-fileupload');
-const {saveFile , saveFiles} = require('./utils/gallary');
+const {saveFile , saveFiles , deleteFile} = require('./utils/gallary');
+const path = require('path');
 
 //mongo DB connect
 mongoose.connect('mongodb://127.0.0.1:27017/Shopy');
 
-//params
-app.use(express.json());
+
+app.use(express.json());        //for req body
 
 app.use(fileUpload());
 
+app.use('/uploads',express.static(path.join(__dirname,'uploads')))  //for serve static 
+
 //route spitting
-var users = require('./routes/users');
-var posts = require('./routes/posts');
+let users = require('./routes/users');
+let posts = require('./routes/posts');
+let category = require('./routes/category');
 
 
 
-app.post('/file', saveFiles , (req,res,next)=>{
+
+app.post('/file', saveFile , (req,res,next)=>{
     res.json({
         msg : 'File Uploaded',
         filenames : req.fileUploadedName
@@ -34,9 +39,18 @@ app.post('/multi_file', saveFiles , (req,res,next)=>{
     })
 });
 
+app.post('/delete_file' , async (req, res , next) => {
+    await deleteFile(req.body.filename);
+    res.json({
+        msg : 'File Deleted',
+    })
+})
+
 app.use('/users', users);
 app.use('/posts', posts);
+app.use('/cat',category);
 
+//for error message
 app.use((err, req, res, next) => {
     err.status = err.status || 200;
 
