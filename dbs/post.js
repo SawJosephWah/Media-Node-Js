@@ -3,8 +3,10 @@ const { Schema } = mongoose;
 
 const postSchema = new Schema({
     user:  {type:Schema.Types.ObjectId, required : true , ref:'User'},
-    title : {type:String, required : true },
-    desc : {type:String, required : true },
+    cat: {type:Schema.Types.ObjectId, required : true , ref:'Cat'},
+    title : { type:String, required : true },
+    image: { type:String , required:true },
+    desc : { type:String, required : true },
     create : {type:Date, default:Date.now }, 
   });
 

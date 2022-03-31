@@ -30,7 +30,7 @@ let get = async (req,res,next) => {
 }
 
 let update = async (req,res,next) => {
-    let cat = await DB.findById(req.params.id );
+    let cat = await DB.findById(req.params.id);
     if(cat){
         await DB.findByIdAndUpdate(cat._id , req.body);
         let updatedCat = await DB.findById(cat._id);
