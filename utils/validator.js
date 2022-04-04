@@ -18,7 +18,7 @@ module.exports = {
     },
     validateParamId : (schema) => {
         return (req ,res, next) => {
-            let validate = schema.validate({id:req.params.id})
+            let validate = schema.validate({paginatePage:req.params.page})
             if(validate.error){
                 next(new Error(validate.error.details[0].message)) 
             }else{

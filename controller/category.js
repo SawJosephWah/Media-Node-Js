@@ -12,7 +12,7 @@ let add = async (req, res, next) => {
 
     let getName =await DB.findOne({name:req.body.name});
     if(getName){
-        next(new Error('This name aready exists'));
+        next(new Error('This category name aready exists'));
         return;
     }
     let newCat = await new DB(req.body).save();

@@ -1,4 +1,5 @@
 let DB = require('../dbs/post');
+let CommentDB = require('../dbs/comment')
 
 let Helper = require('../utils/helper')
 
@@ -18,6 +19,9 @@ let add =async  (req, res) =>{
 
 let get =async  (req, res , next) => {
     let post = await DB.findById(req.params.id).populate('user cat','-password -__v');
+    let comments = await CommentDB.find({postId:post._id});
+    post=post.toObject();
+    post.comments = comments;
 
     if(post){
       Helper.fMsg(res,true,'Get Post',post);
@@ -73,6 +77,35 @@ let byuser =async  (req,res,next) => {
       }
   }
 
+let bytag =async  (req,res,next) => {
+    let post = await DB.find({tag:req.params.id}).populate('user cat','-password -__v');
+  
+      if(post){
+        Helper.fMsg(res,true,'Get Post',post);
+      }else{
+       next(new Error('Error , post not found with that user ID'));
+      }
+  }
+
+let paginate = async (req,res,next) => {
+    // console.log(req.params.page);
+    let page = req.params.page;
+
+    //for minus params
+    if(page <= 0){
+      page = 1;
+    }
+    page = page == 1 ? 0 : page - 1;
+
+    let limit = process.env.POST_LIMIT;
+    let postStartCount = page * limit;
+
+    let posts = await DB.find().limit(limit).skip(postStartCount);
+
+    Helper.fMsg(res,true,'Paginated Posts',posts);
+
+}
+
 
   module.exports = {
       all,
@@ -81,5 +114,7 @@ let byuser =async  (req,res,next) => {
       update,
       drop,
       bycat,
-      byuser
+      byuser,
+      bytag,
+      paginate
   }

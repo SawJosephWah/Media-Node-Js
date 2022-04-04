@@ -17,13 +17,14 @@ app.use(fileUpload());
 
 app.use('/uploads',express.static(path.join(__dirname,'uploads')))  //for serve static 
 
+
+
 //route spitting
 let users = require('./routes/users');
 let posts = require('./routes/posts');
 let category = require('./routes/category');
-
-
-
+let tag = require('./routes/tag');
+let comment = require('./routes/comment');
 
 app.post('/file', saveFile , (req,res,next)=>{
     res.json({
@@ -49,6 +50,8 @@ app.post('/delete_file' , async (req, res , next) => {
 app.use('/users', users);
 app.use('/posts', posts);
 app.use('/cat',category);
+app.use('/tag',tag);
+app.use('/comment',comment);
 
 //for error message
 app.use((err, req, res, next) => {
@@ -60,6 +63,9 @@ app.use((err, req, res, next) => {
     })
   })
 
+app.get('*',(req,res,next)=>{
+    next(new Error('Route not found'))
+})
   
 app.listen(process.env.PORT,()=>{
     console.log(`Web App Running on post ${process.env.PORT} and DB is ${process.env.DB_NAME}`);

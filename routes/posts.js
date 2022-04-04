@@ -1,7 +1,6 @@
 var router = require('express').Router();
-let {validateToken} = require('../utils/validator');
 let {saveFile} = require('../utils/gallary');
-let {validator,validateParamId} = require('../utils/validator');
+let {validator,validateParamId,validateToken} = require('../utils/validator');
 let {schema} = require('../utils/schema');
 
 let controller = require('../controller/post');
@@ -18,6 +17,12 @@ router.get('/byCat/:id',controller.bycat);
 
 // post by user
 router.get('/byUser/:id',controller.byuser);
+
+//post by tag
+router.get('/bytag/:id',controller.bytag);
+
+//paginate
+router.get('/paginate/:page', validateParamId(schema.validateParam.paginatePage) , controller.paginate )
 
 
 router.route('/:id')
