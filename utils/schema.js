@@ -19,6 +19,9 @@ module.exports = {
             paginatePage : Joi.object({
                 paginatePage: Joi.number()
             }),
+            likeUnlike : Joi.object({
+                likeUnlike: Joi.string().regex(/^[0-1]{1}$/).required()
+            }),
         } ,
         UserRegister : Joi.object({
             name : Joi.string().required(),

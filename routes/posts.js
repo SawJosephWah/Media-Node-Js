@@ -1,6 +1,6 @@
 var router = require('express').Router();
 let {saveFile} = require('../utils/gallary');
-let {validator,validateParamId,validateToken} = require('../utils/validator');
+let {validator,validateParamId,validateToken,validatePageId,validateLikeUnlike} = require('../utils/validator');
 let {schema} = require('../utils/schema');
 
 let controller = require('../controller/post');
@@ -22,7 +22,10 @@ router.get('/byUser/:id',controller.byuser);
 router.get('/bytag/:id',controller.bytag);
 
 //paginate
-router.get('/paginate/:page', validateParamId(schema.validateParam.paginatePage) , controller.paginate )
+router.get('/paginate/:page', validatePageId(schema.validateParam.paginatePage) , controller.paginate )
+
+//togglle like
+router.get('/toggle_like/:id/:like_unlike',validateParamId(schema.validateParam.id),validateLikeUnlike(schema.validateParam.likeUnlike),controller.toggleLike);
 
 
 router.route('/:id')

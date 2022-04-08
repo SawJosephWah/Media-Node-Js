@@ -106,6 +106,29 @@ let paginate = async (req,res,next) => {
 
 }
 
+let toggleLike  =async (req,res,next) => {
+
+  let post_id = req.params.id;
+  let post =await DB.findById(post_id);
+  
+  if(post){
+    if(req.params.like_unlike == 1){
+      post.like = post.like +1;
+    }else{
+      post.like = post.like -1;
+    }
+
+    await DB.findByIdAndUpdate(post._id,post);
+
+    let result =await DB.findById(post._id);
+
+    Helper.fMsg(res,true,'Toggle Like',result);
+
+  } else{
+    next(new Error('Post with that ID not found'));
+  }
+}
+
 
   module.exports = {
       all,
@@ -116,5 +139,6 @@ let paginate = async (req,res,next) => {
       bycat,
       byuser,
       bytag,
-      paginate
+      paginate,
+      toggleLike
   }
